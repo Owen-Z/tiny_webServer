@@ -24,7 +24,6 @@ int main(){
     
     if(listen(socketFD, 10) == -1) perror("listen");
 
-    
     int acceptFD;
     socklen_t sockaddrInSize = sizeof(sockaddr);
     acceptFD = accept(socketFD, (struct sockaddr *)&theirAddr, &sockaddrInSize);
