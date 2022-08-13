@@ -5,6 +5,7 @@
 #include <netinet/in.h>
 #include <sys/epoll.h>
 #include <fcntl.h>
+#include "time_wheel.h"
 
 const int MAX_EVENT_NUMBER = 10000; //最大事件数
 
@@ -15,6 +16,7 @@ public:
     int port;
     int epollfd;
     const int BUFFER_SIZE = 2048;
+    time_wheel tw;
     epoll_event events[MAX_EVENT_NUMBER];
 
 public:
