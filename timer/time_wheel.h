@@ -4,14 +4,15 @@
 #include <time.h>
 #include <netinet/in.h>
 #include <stdio.h>
+#include <sys/epoll.h>
+#include <assert.h>
+#include <unistd.h>
+#define EPOLL_DEFAULT_VAL 0
 
 class time_timer;
 
-struct client_data{
-    sockaddr_in address;
-    int sockfd;
-    time_timer *timer;
-};
+#include "../user_data.h"
+
 
 class time_timer{
 public:
@@ -27,13 +28,14 @@ public:
 
 };
 
-class time_wheel
-{
+class time_wheel{
+public:
+    static int epollfd; 
 private:
-   static const int N = 60; // 时间轮上槽的数目
-   static const int SI = 1; // 时间槽转换间隔
-   time_timer* slots[N];
-   int cur_slot;    // 当前槽
+    static const int N = 60; // 时间轮上槽的数目
+    static const int SI = 1; // 时间槽转换间隔
+    time_timer* slots[N];
+    int cur_slot;    // 当前槽
 public:
     time_wheel();
     ~time_wheel();
@@ -42,5 +44,7 @@ public:
     void tick();    // 心搏函数，槽转换
 };
 
+ 
+void cb_func(client_data *user_data);
 
 #endif

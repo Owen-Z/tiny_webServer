@@ -8,8 +8,8 @@ else
 
 endif
 
-server: main.cpp  webserver.cpp 
-	$(CXX) -o server  $^ $(CXXFLAGS) -lpthread -lmysqlclient
+server: main.cpp webserver.cpp ./timer/time_wheel.cpp 
+	$(CXX) -g -o server  $^ $(CXXFLAGS) -lpthread -lmysqlclient
 
 clean:
 	rm  -r server

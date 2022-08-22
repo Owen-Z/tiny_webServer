@@ -1,8 +1,13 @@
 #include "time_wheel.h"
 
 void cb_func(client_data* user_data){
-    
+    epoll_ctl(time_wheel::epollfd, EPOLL_CTL_DEL, user_data->sockfd, 0);
+    assert(user_data);
+    close(user_data->sockfd);
+    printf("close client connection\n");
 }
+
+int time_wheel::epollfd = 0;
 
 time_wheel::time_wheel() : cur_slot(0){
     for(int i = 0; i < N; ++i){
@@ -37,6 +42,7 @@ time_timer* time_wheel::add_timer(int timeout){
     int ratation = ticks / N;
     int ts = (cur_slot + (ticks % N)) % N;
     time_timer* timer = new time_timer(ratation, ts);
+    timer->cb_func = cb_func;
 
     if(!slots[ts]){
         slots[ts] = timer;
@@ -45,6 +51,7 @@ time_timer* time_wheel::add_timer(int timeout){
         slots[ts]->prev = timer;
         slots[ts] = timer;
     }
+    return timer;
 }
 
 void time_wheel::delete_timer(time_timer* timer){
